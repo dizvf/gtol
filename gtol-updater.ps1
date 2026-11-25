@@ -5,7 +5,7 @@ $ExeRelativePath = 'GTOL.exe'
 $InstallRoot = 'C:\gtol'
 $CheckEverySeconds = 60
 
-# Run with: powershell.exe -NoProfile -File .\gtol-updater.ps1
+# Run with: powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\gtol-updater.ps1
 # Keep this PowerShell window open for automatic update checks and app output.
 
 $ErrorActionPreference = 'Stop'
@@ -75,6 +75,9 @@ function Stop-App {
             Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
             Wait-Process -Id $process.Id -Timeout 10 -ErrorAction SilentlyContinue
         }
+    }
+    for ($attempt = 0; $attempt -lt 50 -and (Get-AppProcesses).Count -gt 0; $attempt++) {
+        [Threading.Thread]::Sleep(200)
     }
     if ((Get-AppProcesses).Count -gt 0) { throw 'The executable is still running.' }
 }
