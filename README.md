@@ -5,7 +5,7 @@ This repo builds a terminal test app called `GTOL.exe`. Each change to `Program.
 ## Run the updater
 
 1. Download [`gtol-updater.ps1`](./gtol-updater.ps1) from this repository.
-2. Open PowerShell in the folder containing the download. Run `powershell.exe -NoProfile -File .\gtol-updater.ps1`.
+2. Open PowerShell in the folder containing the download. Run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\gtol-updater.ps1`.
 3. Keep the terminal open. The updater installs to `C:\gtol\app`, runs `GTOL.exe` in the same terminal, and checks for releases every 60 seconds.
 4. Edit `Program.cs` on `main`. When the Windows build finishes, the updater stops the old exe, replaces the app folder, and starts the new build.
 
