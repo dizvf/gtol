@@ -1,12 +1,6 @@
 name: Build Windows test app
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'GTOL.csproj'
-      - 'Program.cs'
-      - '.github/workflows/release.yml'
   workflow_dispatch:
 
 permissions:
@@ -27,9 +21,9 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Set-Content -LiteralPath publish/version.txt -Value '${{ github.sha }}'
           Compress-Archive -Path publish/* -DestinationPath gtol-win-x64.zip -Force
-      - name: Publish release for updater
+      - name: Publish test prerelease
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create 'build-${{ github.run_number }}' gtol-win-x64.zip --title 'GTOL test build ${{ github.run_number }}' --notes 'Standalone Windows test app.' --latest
+          gh release create 'build-${{ github.run_number }}' gtol-win-x64.zip --title 'GTOL test build ${{ github.run_number }}' --notes 'Standalone Windows test app.' --prerelease
