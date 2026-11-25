@@ -3,7 +3,7 @@ $Repo = 'dizvf/gtol'
 $ZipAssetName = 'gtol-win-x64.zip'
 $ExeRelativePath = 'GTOL.exe'
 $InstallRoot = 'C:\gtol'
-$CheckEverySeconds = 60
+$CheckEverySeconds = 120
 
 # Run with: powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\gtol-updater.ps1
 # Keep this PowerShell window open for automatic update checks and app output.
