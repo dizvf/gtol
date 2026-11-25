@@ -44,9 +44,10 @@ function Get-ExePath([string]$directory) {
 
 function Get-AppProcesses {
     $target = Get-ExePath $app
-    @(Get-CimInstance Win32_Process | Where-Object {
-        $_.ExecutablePath -and [string]::Equals(
-            $_.ExecutablePath, $target, [StringComparison]::OrdinalIgnoreCase)
+    $name = [IO.Path]::GetFileNameWithoutExtension($target)
+    @(Get-Process -Name $name -ErrorAction SilentlyContinue | Where-Object {
+        $_.Path -and [string]::Equals(
+            $_.Path, $target, [StringComparison]::OrdinalIgnoreCase)
     })
 }
 
@@ -63,7 +64,7 @@ function Start-App {
 
 function Stop-App {
     foreach ($item in (Get-AppProcesses)) {
-        $process = Get-Process -Id $item.ProcessId -ErrorAction SilentlyContinue
+        $process = Get-Process -Id $item.Id -ErrorAction SilentlyContinue
         if ($null -eq $process) { continue }
         Log "Stopping $($process.Id) before updating"
         if ($process.MainWindowHandle -ne 0) {
@@ -71,8 +72,8 @@ function Stop-App {
             Wait-Process -Id $process.Id -Timeout 10 -ErrorAction SilentlyContinue
         }
         if (Get-Process -Id $process.Id -ErrorAction SilentlyContinue) {
-            Stop-Process -Id $process.Id -Force -ErrorAction Stop
-            Wait-Process -Id $process.Id -Timeout 10 -ErrorAction Stop
+            Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+            Wait-Process -Id $process.Id -Timeout 10 -ErrorAction SilentlyContinue
         }
     }
     if ((Get-AppProcesses).Count -gt 0) { throw 'The executable is still running.' }
